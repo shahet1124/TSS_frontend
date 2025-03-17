@@ -2,7 +2,7 @@ import axios from 'axios';
 import { Coupon, LoginCredentials } from '../types';
 
 const api = axios.create({
-    baseURL: 'https://backend-gnanganga-1.onrender.com/api',
+    baseURL: 'https://backend-gnanganga.onrender.com/api',
     withCredentials: true
 });
 
