@@ -2,16 +2,32 @@ import axios from 'axios';
 import { Coupon, LoginCredentials } from '../types';
 
 const api = axios.create({
-    baseURL: 'https://backend-gnanganga.onrender.com/api',
+    baseURL: 'https://tss-backend-6jjw.onrender.com/api',
     withCredentials: true
 });
+
+// Automatically attach token for all requests
+api.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token'); // Fetch token
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`; // Add it to headers
+        }
+        return config;
+    },
+    (error) => Promise.reject(error)
+);
 
 export const authApi = {
     login: async (credentials: LoginCredentials) => {
         const response = await api.post('/auth/login', credentials);
+        if (response.data.token) {
+            localStorage.setItem('token', response.data.token); // Save token
+        }
         return response.data;
     },
     logout: async () => {
+        localStorage.removeItem('token'); // Clear token on logout
         const response = await api.post('/auth/logout');
         return response.data;
     }
